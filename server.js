@@ -10,7 +10,7 @@ const Server = require('socket.io').Server;
 const http = require('http');
 const cors = require('cors');
 const express = require('express');
-const configDotenv = require('dotenv').config();
+const config = require('dotenv');
 
 const prisma = new PrismaClient(); 
 
@@ -25,7 +25,7 @@ const io = new Server(server, {
     },
 });
 
-configDotenv();
+config();
 
 app.use(express.json());
 app.use(cookieParser());
