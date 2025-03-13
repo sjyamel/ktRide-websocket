@@ -25,7 +25,7 @@ const io = new Server(server, {
     },
 });
 
-config();
+// config();
 
 app.use(express.json());
 app.use(cookieParser());
