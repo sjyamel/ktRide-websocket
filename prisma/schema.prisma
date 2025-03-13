@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://rrkphc:xau_bYFq4CGajphpm1WL3IwBr6OmYwXYW3Z7@us-east-1.sql.xata.sh/kuber:main?sslmode=require"
+}
+
+model Dispute {
+  id                         String  @id
+  title                      String
+  message                    String
+  userId                     String?
+  status                     String
+  riderId                    String?
+  rideId                     String?
+  Ride                       Ride?   @relation(fields: [rideId], references: [id])
+  User_Dispute_riderIdToUser User?   @relation("Dispute_riderIdToUser", fields: [riderId], references: [id])
+  User_Dispute_userIdToUser  User?   @relation("Dispute_userIdToUser", fields: [userId], references: [id])
+}
+
+model Notifications {
+  id      String  @id
+  title   String
+  message String
+  userId  String?
+  status  String
+  User    User?   @relation(fields: [userId], references: [id])
+}
+
+model Ride {
+  id                       String    @id
+  riderId                  String
+  clientId                 String?
+  date                     DateTime
+  destination              Json
+  cost                     Float?
+  status                   String
+  vehicleId                String?
+  Dispute                  Dispute[]
+  User_Ride_clientIdToUser User?     @relation("Ride_clientIdToUser", fields: [clientId], references: [id])
+  User_Ride_riderIdToUser  User      @relation("Ride_riderIdToUser", fields: [riderId], references: [id])
+  Vehicle                  Vehicle?  @relation(fields: [vehicleId], references: [id])
+}
+
+model SystemConfig {
+  id               String @id
+  pricePerKm       Float  @default(0.0)
+  registrationFees Float  @default(0.0)
+}
+
+model User {
+  id                            String          @id
+  name                          String
+  phone                         String
+  email                         String?
+  password                      String
+  location                      Json?
+  profileType                   String
+  status                        String
+  riderIdentity                 String?
+  Dispute_Dispute_riderIdToUser Dispute[]       @relation("Dispute_riderIdToUser")
+  Dispute_Dispute_userIdToUser  Dispute[]       @relation("Dispute_userIdToUser")
+  Notifications                 Notifications[]
+  Ride_Ride_clientIdToUser      Ride[]          @relation("Ride_clientIdToUser")
+  Ride_Ride_riderIdToUser       Ride[]          @relation("Ride_riderIdToUser")
+  Vehicle                       Vehicle[]
+}
+
+model Vehicle {
+  id          String  @id
+  driverId    String?
+  model       String
+  type        String
+  color       String
+  capacity    Int
+  status      String
+  plateNumber String
+  Ride        Ride[]
+  User        User?   @relation(fields: [driverId], references: [id])
+}
