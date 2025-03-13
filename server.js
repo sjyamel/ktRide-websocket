@@ -10,7 +10,7 @@ const Server = require('socket.io').Server;
 const http = require('http');
 const cors = require('cors');
 const express = require('express');
-const config = require('dotenv');
+// const config = require('dotenv');
 
 const prisma = new PrismaClient(); 
 
